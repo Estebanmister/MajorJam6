@@ -48,6 +48,9 @@ public class Ground : MonoBehaviour
             newBlock.transform.parent = transform;
             groundBlocksTemp.Add(where, newBlock.GetComponent<EditableBlock>());
         }
+
+        // todo: move all this to EditableBlock, make the blocks turn themselves into wedges/corners automatically
+
         Vector3Int[] positions = {Vector3Int.right, Vector3Int.forward, Vector3Int.back, Vector3Int.left};
         foreach(Vector3Int offset in positions){
             if((where+offset).x >= size-1 || (where+offset).y >= size-1 || (where+offset).z >= size-1 || 
@@ -88,11 +91,6 @@ public class Ground : MonoBehaviour
             }
             i += 1;
         }
-
-        // todo: make sure current spot is not occupied by a full block
-        // if current spot is occupied by a wedge or corner block, replace it (make sure groundBlocksProp now points to the correct block)
-        // spawn wedge blocks around the blocks position, make sure their block type is set to 1, make sure these wedge blocks do not overlap any other block
-        // spawn corner blocks, make sure their block type is 2, make sure these do not overlap any other
 
     }
     public void SaveGround(){
