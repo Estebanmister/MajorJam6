@@ -5,7 +5,6 @@ using UnityEngine;
 [SerializeField]
 public class GroundProperty
 {
-    public Vector3Int position;
     public float humidity;
     public float K, N, P;
 }
@@ -14,7 +13,7 @@ public class Ground : MonoBehaviour
 {
     public GameObject groundBlockPrefab;
     public int size = 10;
-    public List<GroundProperty> groundBlocksProp = new List<GroundProperty>();
+    public Dictionary<Vector3Int, GroundProperty> groundBlocksProp = new Dictionary<Vector3Int, GroundProperty>();
     public MeshFilter combinedGround;
     MeshRenderer meshRenderer;
     public bool editMode = true;
@@ -25,6 +24,13 @@ public class Ground : MonoBehaviour
                 newBlock.transform.parent = transform;
             }
         }
+    }
+    public void PlaceBlock(Vector3Int where){
+        // todo: make sure current spot is not occupied by a full block
+        // if current spot is occupied by a wedge or corner block, replace it (make sure groundBlocksProp now points to the correct block)
+        // spawn wedge blocks around the blocks position, make sure their block type is set to 1, make sure these wedge blocks do not overlap any other block
+        // spawn corner blocks, make sure their block type is 2, make sure these do not overlap any other
+
     }
     public void SaveGround(){
         // thanks to Bunzaga on the forums for the help with this holy fuck
@@ -40,7 +46,7 @@ public class Ground : MonoBehaviour
             {
                 continue;
             }
-
+            groundBlocksProp.Add(Vector3Int.FloorToInt(meshFilter.transform.position),meshFilter.GetComponent<EditableBlock>().properties);
             for (int s = 0; s < meshFilter.sharedMesh.subMeshCount; s++)
             {
                 // this loop wont be needed probably
@@ -78,6 +84,7 @@ public class Ground : MonoBehaviour
         {
             CombineInstance[] combineInstanceArray = (combineInstanceArrays[m] as ArrayList).ToArray(typeof(CombineInstance)) as CombineInstance[];
             meshes[m] = new Mesh();
+            // most worlds wont be anywhere near 200x200 blocks, but just in case
             meshes[m].indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             meshes[m].CombineMeshes(combineInstanceArray, true, true);
 
@@ -125,8 +132,9 @@ public class Ground : MonoBehaviour
     public void LoadGround(){
         // load the ground for editing
         meshRenderer.enabled = false;
-        foreach(GroundProperty property in groundBlocksProp){
-            GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(property.position.x, property.position.y, property.position.z), Quaternion.identity);
+        foreach(Vector3Int position in groundBlocksProp.Keys){
+            GroundProperty property = groundBlocksProp[position];
+            GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(position.x, position.y, position.z), Quaternion.identity);
             newBlock.transform.parent = transform;
             newBlock.GetComponent<EditableBlock>().properties = property;
         }

@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class StaticEntity : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public PlantScriptable plantType;
+    public Ground ground;
+
+    public bool CheckTerrain(Vector3Int positionToCheck){
+        
+        return false;
+    }
     void Start()
     {
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         
