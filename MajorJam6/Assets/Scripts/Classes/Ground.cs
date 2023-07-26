@@ -40,6 +40,7 @@ public class Ground : MonoBehaviour
             } else {
                 GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)where, Quaternion.identity);
                 newBlock.transform.parent = transform;
+                DestroyImmediate(groundBlocksTemp[where].gameObject);
                 groundBlocksTemp[where] = newBlock.GetComponent<EditableBlock>();
             }
         } else {
@@ -59,9 +60,12 @@ public class Ground : MonoBehaviour
                 groundBlocksTemp.Add(where + offset, newWedge.GetComponent<EditableBlock>());
             } else {
                 if(groundBlocksTemp[where + offset].type != 0 ){
-                    // do something to combine wedges together? or just replace them? idk
+                    GameObject newWedge = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
+                    newWedge.transform.parent = transform;
+                    DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
+                    groundBlocksTemp[where+offset] = newWedge.GetComponent<EditableBlock>();
                 } else {
-                    continue;
+
                 }
             }
         }
@@ -75,16 +79,14 @@ public class Ground : MonoBehaviour
             }
             if(!groundBlocksTemp.ContainsKey(where + offset)){
                 GameObject newCorner = Instantiate(groundCornerPrefab, (Vector3)(where + offset), Quaternion.LookRotation(positions[i], Vector3.up));
-                i += 1;
                 newCorner.transform.parent = transform;
                 groundBlocksTemp.Add(where + offset, newCorner.GetComponent<EditableBlock>());
             } else {
                 if(groundBlocksTemp[where + offset].type != 0 ){
                     // do something to combine wedges together? or just replace them? idk
-                } else {
-                    continue;
                 }
             }
+            i += 1;
         }
 
         // todo: make sure current spot is not occupied by a full block
