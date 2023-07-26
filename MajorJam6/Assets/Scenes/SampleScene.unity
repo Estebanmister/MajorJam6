@@ -156,6 +156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundBlockPrefab: {fileID: 6935657077021352697, guid: 21899ba699bbb9d4c8a81aa2aca18336, type: 3}
+  groundWedgePrefab: {fileID: 6886848298106894827, guid: 5d888b7d552fa3546a02c5c87bbc85d4, type: 3}
+  groundCornerPrefab: {fileID: 8862746915194937599, guid: 090b32d89b45c1b4abc2db31ff683f99, type: 3}
   size: 50
   combinedGround: {fileID: 375195095}
   editMode: 1

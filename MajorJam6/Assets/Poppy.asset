@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
   m_Name: Poppy
   m_EditorClassIdentifier: 
-  plantName: 
-  K_consumption: 0
+  plantName: Poppy
+  K_consumption: 1
   P_consumption: 0
   N_consumption: 0
   K_release: 0
   P_release: 0
-  N_release: 0
-  growthCycle: 0
-  minTemp: 0
-  maxTemp: 0
-  minHumid: 0
-  maxHumid: 0
+  N_release: 1
+  growthCycle: 1
+  minTemp: 16
+  maxTemp: 35
+  minHumid: 30
+  maxHumid: 100
+  shadeRadius: 0
