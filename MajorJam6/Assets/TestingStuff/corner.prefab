@@ -96,8 +96,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9be7fcda3be700b4694a91ee1a68cf15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  properties:
+    humidity: 0
+    K: 0
+    N: 0
+    P: 0
   meshRenderer: {fileID: 2238329055750397513}
   types:
-  - {fileID: 2100000, guid: bca31a1a8d0973b4689f133d88b9cfd2, type: 2}
+  - {fileID: 2100000, guid: 1ba22296578a1d442a94fbd6e3da0527, type: 2}
   - {fileID: 2100000, guid: b861fbc261b026c4a9aae062230418c2, type: 2}
+  - {fileID: 2100000, guid: 12e536654f3616548a58507037151f5f, type: 2}
+  - {fileID: 2100000, guid: bca31a1a8d0973b4689f133d88b9cfd2, type: 2}
   type: 2
+  test_thing: 0

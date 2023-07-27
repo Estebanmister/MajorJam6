@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[SerializeField]
+[System.Serializable]
 public class GroundProperty
 {
     public float humidity;
@@ -231,7 +231,7 @@ public class Ground : MonoBehaviour
     void Update()
     {
         if(editMode){
-            SaveGround();
+            //SaveGround();
         }
     }
 }

@@ -6,14 +6,17 @@ public class WaterPlacer : MonoBehaviour
 {
     public Ground ground;
     public List<Vector3Int> occupiedSpace = new List<Vector3Int>();
+    public List<Vector3Int> surroundingBlocks = new List<Vector3Int>();
     public GameObject waterPlate;
     public GameObject lakePrefab;
     int surface = 0;
     int depth = 99;
+    public bool test= false;
     public void PlaceWater(Vector3Int where){
         PlaceWaterBlock(where);
         GameObject newLake = Instantiate(lakePrefab);
         Lake newLakeCom = newLake.GetComponent<Lake>();
+        newLakeCom.surroundingBlocks = surroundingBlocks;
         MeshFilter meshFilter = newLake.GetComponent<MeshFilter>();
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
@@ -48,6 +51,9 @@ public class WaterPlacer : MonoBehaviour
         }
         
         if(ground.groundEditableBlocks.ContainsKey(where)){
+            surroundingBlocks.Add(where);
+            ground.groundEditableBlocks[where].properties.humidity = 100;
+            ground.groundEditableBlocks[where].UpdateHumidity();
             if (ground.groundEditableBlocks[where].type == 0){
                 return;
             }
@@ -81,5 +87,11 @@ public class WaterPlacer : MonoBehaviour
 
             
         
+    }
+    void Update(){
+        if(test){
+            PlaceWater(new Vector3Int(40,2,25));
+            test = false;
+        }
     }
 }

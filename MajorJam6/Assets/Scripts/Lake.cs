@@ -7,6 +7,8 @@ public class Lake : MonoBehaviour
     public float volume;
     public float maxVolume;
     public float level;
+    public List<Vector3Int> surroundingBlocks = new List<Vector3Int>();
+    public Ground ground;
     void Start()
     {
         
@@ -20,6 +22,7 @@ public class Lake : MonoBehaviour
         pos.y = map(volume, 0, maxVolume, -level, 0);
         transform.position = pos;
         if(volume < 0.1f){
+
             Destroy(gameObject);
         }
     }
