@@ -14,6 +14,7 @@ public class Ground : MonoBehaviour
     public GameObject groundBlockPrefab;
     public GameObject groundWedgePrefab;
     public GameObject groundCornerPrefab;
+    public GameObject groundInvCornerPrefab;
     public int size = 10;
     public Dictionary<Vector3Int, GroundProperty> groundBlocksProp = new Dictionary<Vector3Int, GroundProperty>();
 
@@ -33,10 +34,14 @@ public class Ground : MonoBehaviour
             }
         }
     }
-    public void PlaceBlock(Vector3Int where){
+    public bool PlaceBlock(Vector3Int where){
+        // Place a block on the map while in edit mode
+        // update all blocks around it to become wedges/corners/inverted corners to make it look like a mound of dirt
+        // returns true on success
         if(groundBlocksTemp.ContainsKey(where)){
             if(groundBlocksTemp[where].type == 0){
-                return;
+                // if the current position is blocked, dont try anything more
+                return false;
             } else {
                 GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)where, Quaternion.identity);
                 newBlock.transform.parent = transform;
@@ -48,9 +53,6 @@ public class Ground : MonoBehaviour
             newBlock.transform.parent = transform;
             groundBlocksTemp.Add(where, newBlock.GetComponent<EditableBlock>());
         }
-
-        // todo: move all this to EditableBlock, make the blocks turn themselves into wedges/corners automatically
-
         Vector3Int[] positions = {Vector3Int.right, Vector3Int.forward, Vector3Int.back, Vector3Int.left};
         foreach(Vector3Int offset in positions){
             if((where+offset).x >= size-1 || (where+offset).y >= size-1 || (where+offset).z >= size-1 || 
@@ -62,13 +64,27 @@ public class Ground : MonoBehaviour
                 newWedge.transform.parent = transform;
                 groundBlocksTemp.Add(where + offset, newWedge.GetComponent<EditableBlock>());
             } else {
-                if(groundBlocksTemp[where + offset].type != 0 ){
+                if(groundBlocksTemp[where + offset].type == 1 ){
+                    if(groundBlocksTemp[where+offset].transform.forward != -offset){
+                        Quaternion rotation;
+                        rotation = Quaternion.LookRotation(groundBlocksTemp[where+offset].transform.forward + offset, Vector3.up);
+                        GameObject newInvCorner = Instantiate(groundInvCornerPrefab, (Vector3)(where + offset), rotation);
+                        newInvCorner.transform.parent = transform;
+                        DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
+                        groundBlocksTemp[where+offset] = newInvCorner.GetComponent<EditableBlock>();
+                    } else {
+                        // two opposing wedges make a full block?
+                        GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)(where + offset), Quaternion.identity);
+                        newBlock.transform.parent = transform;
+                        DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
+                        groundBlocksTemp[where+offset] = newBlock.GetComponent<EditableBlock>();
+                    }
+                    
+                } else if (groundBlocksTemp[where + offset].type == 2 ){
                     GameObject newWedge = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
                     newWedge.transform.parent = transform;
                     DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
                     groundBlocksTemp[where+offset] = newWedge.GetComponent<EditableBlock>();
-                } else {
-
                 }
             }
         }
@@ -91,7 +107,7 @@ public class Ground : MonoBehaviour
             }
             i += 1;
         }
-
+        return true;
     }
     public void SaveGround(){
         // thanks to Bunzaga on the forums for the help with this holy fuck
@@ -212,7 +228,7 @@ public class Ground : MonoBehaviour
     void Update()
     {
         if(editMode){
-            SaveGround();
+            //SaveGround();
         }
     }
 }

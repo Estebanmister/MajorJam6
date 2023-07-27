@@ -10,6 +10,7 @@ public class EditableBlock : MonoBehaviour
     // 0 is a full block
     // 1 is a wedge block
     // 2 is a corner block
+    // 3 are inverted corner blocks
     // only full blocks are important, the others are decoration
     public int type = 0;
     void Start()
