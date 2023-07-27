@@ -160,6 +160,8 @@ MonoBehaviour:
   groundCornerPrefab: {fileID: 8862746915194937599, guid: 090b32d89b45c1b4abc2db31ff683f99, type: 3}
   groundInvCornerPrefab: {fileID: 4825798014752123708, guid: 135adfa753467eb4b962fd8795bd9d19, type: 3}
   size: 50
+  height: 6
+  seed: 0
   combinedGround: {fileID: 375195095}
   editMode: 1
 --- !u!64 &375195093
@@ -241,6 +243,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &620109157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 620109159}
+  - component: {fileID: 620109158}
+  m_Layer: 0
+  m_Name: WaterPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &620109158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620109157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902804e705f1ea649ad043180b8346f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground: {fileID: 375195092}
+  occupiedSpace: []
+  waterPlate: {fileID: 8595864317571774679, guid: ed621dc7e4366274dac0a1ef5321acd0, type: 3}
+  lakePrefab: {fileID: 6417148547432540368, guid: 4449be749c160064a85bac6e7a8fded6, type: 3}
+  test: 0
+--- !u!4 &620109159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620109157}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:

@@ -16,9 +16,11 @@ public class Ground : MonoBehaviour
     public GameObject groundCornerPrefab;
     public GameObject groundInvCornerPrefab;
     public int size = 10;
+    public int height = 4;
+    public float seed = 0;
     public Dictionary<Vector3Int, GroundProperty> groundBlocksProp = new Dictionary<Vector3Int, GroundProperty>();
 
-    Dictionary<Vector3Int, EditableBlock> groundBlocksTemp = new Dictionary<Vector3Int, EditableBlock>();
+    public Dictionary<Vector3Int, EditableBlock> groundEditableBlocks = new Dictionary<Vector3Int, EditableBlock>();
     public MeshFilter combinedGround;
     MeshRenderer meshRenderer;
     public bool editMode = true;
@@ -27,9 +29,10 @@ public class Ground : MonoBehaviour
             for(int ii = 0; ii < size; ii += 1){
                 GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(i, 0, ii), Quaternion.identity);
                 newBlock.transform.parent = transform;
-                groundBlocksTemp.Add(new Vector3Int(i, 0, ii), newBlock.GetComponent<EditableBlock>());
-                if(Mathf.PerlinNoise((float)i/(float)size, (float)ii/(float)size) > 0.5f){
-                    PlaceBlock(new Vector3Int(i, 1, ii));
+                groundEditableBlocks.Add(new Vector3Int(i, 0, ii), newBlock.GetComponent<EditableBlock>());
+                float heightHere =  Mathf.PerlinNoise(((float)i/(float)size)+seed, ((float)ii/(float)size)+seed) * (float)height;
+                for(int h = 0;h <= (int)(heightHere); h+=1){
+                    PlaceBlock(new Vector3Int(i, h, ii));
                 }
             }
         }
@@ -38,20 +41,20 @@ public class Ground : MonoBehaviour
         // Place a block on the map while in edit mode
         // update all blocks around it to become wedges/corners/inverted corners to make it look like a mound of dirt
         // returns true on success
-        if(groundBlocksTemp.ContainsKey(where)){
-            if(groundBlocksTemp[where].type == 0){
+        if(groundEditableBlocks.ContainsKey(where)){
+            if(groundEditableBlocks[where].type == 0){
                 // if the current position is blocked, dont try anything more
                 return false;
             } else {
                 GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)where, Quaternion.identity);
                 newBlock.transform.parent = transform;
-                DestroyImmediate(groundBlocksTemp[where].gameObject);
-                groundBlocksTemp[where] = newBlock.GetComponent<EditableBlock>();
+                DestroyImmediate(groundEditableBlocks[where].gameObject);
+                groundEditableBlocks[where] = newBlock.GetComponent<EditableBlock>();
             }
         } else {
             GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)where, Quaternion.identity);
             newBlock.transform.parent = transform;
-            groundBlocksTemp.Add(where, newBlock.GetComponent<EditableBlock>());
+            groundEditableBlocks.Add(where, newBlock.GetComponent<EditableBlock>());
         }
         Vector3Int[] positions = {Vector3Int.right, Vector3Int.forward, Vector3Int.back, Vector3Int.left};
         foreach(Vector3Int offset in positions){
@@ -59,32 +62,32 @@ public class Ground : MonoBehaviour
                 (where+offset).x < 0 || (where+offset).y < 0 || (where+offset).z < 0){
                 continue;
             }
-            if(!groundBlocksTemp.ContainsKey(where + offset)){
+            if(!groundEditableBlocks.ContainsKey(where + offset)){
                 GameObject newWedge = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
                 newWedge.transform.parent = transform;
-                groundBlocksTemp.Add(where + offset, newWedge.GetComponent<EditableBlock>());
+                groundEditableBlocks.Add(where + offset, newWedge.GetComponent<EditableBlock>());
             } else {
-                if(groundBlocksTemp[where + offset].type == 1 ){
-                    if(groundBlocksTemp[where+offset].transform.forward != -offset){
+                if(groundEditableBlocks[where + offset].type == 1 ){
+                    if(groundEditableBlocks[where+offset].transform.forward != -offset){
                         Quaternion rotation;
-                        rotation = Quaternion.LookRotation(groundBlocksTemp[where+offset].transform.forward + offset, Vector3.up);
+                        rotation = Quaternion.LookRotation(groundEditableBlocks[where+offset].transform.forward + offset, Vector3.up);
                         GameObject newInvCorner = Instantiate(groundInvCornerPrefab, (Vector3)(where + offset), rotation);
                         newInvCorner.transform.parent = transform;
-                        DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
-                        groundBlocksTemp[where+offset] = newInvCorner.GetComponent<EditableBlock>();
+                        DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
+                        groundEditableBlocks[where+offset] = newInvCorner.GetComponent<EditableBlock>();
                     } else {
                         // two opposing wedges make a full block?
                         GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)(where + offset), Quaternion.identity);
                         newBlock.transform.parent = transform;
-                        DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
-                        groundBlocksTemp[where+offset] = newBlock.GetComponent<EditableBlock>();
+                        DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
+                        groundEditableBlocks[where+offset] = newBlock.GetComponent<EditableBlock>();
                     }
                     
-                } else if (groundBlocksTemp[where + offset].type == 2 ){
+                } else if (groundEditableBlocks[where + offset].type == 2 ){
                     GameObject newWedge = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
                     newWedge.transform.parent = transform;
-                    DestroyImmediate(groundBlocksTemp[where+offset].gameObject);
-                    groundBlocksTemp[where+offset] = newWedge.GetComponent<EditableBlock>();
+                    DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
+                    groundEditableBlocks[where+offset] = newWedge.GetComponent<EditableBlock>();
                 }
             }
         }
@@ -96,12 +99,12 @@ public class Ground : MonoBehaviour
                 i += 1;
                 continue;
             }
-            if(!groundBlocksTemp.ContainsKey(where + offset)){
+            if(!groundEditableBlocks.ContainsKey(where + offset)){
                 GameObject newCorner = Instantiate(groundCornerPrefab, (Vector3)(where + offset), Quaternion.LookRotation(positions[i], Vector3.up));
                 newCorner.transform.parent = transform;
-                groundBlocksTemp.Add(where + offset, newCorner.GetComponent<EditableBlock>());
+                groundEditableBlocks.Add(where + offset, newCorner.GetComponent<EditableBlock>());
             } else {
-                if(groundBlocksTemp[where + offset].type != 0 ){
+                if(groundEditableBlocks[where + offset].type != 0 ){
                     // do something to combine wedges together? or just replace them? idk
                 }
             }
@@ -174,7 +177,7 @@ public class Ground : MonoBehaviour
         meshFilterCombine.sharedMesh = new Mesh();
         meshFilterCombine.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshFilterCombine.sharedMesh.CombineMeshes(combineInstances, false, false);
-        groundBlocksTemp.Clear();
+        groundEditableBlocks.Clear();
         // destroy other meshes
         foreach (Mesh oldMesh in meshes)
         {
@@ -214,7 +217,7 @@ public class Ground : MonoBehaviour
             GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(position.x, position.y, position.z), Quaternion.identity);
             newBlock.transform.parent = transform;
             newBlock.GetComponent<EditableBlock>().properties = property;
-            groundBlocksTemp.Add(position, newBlock.GetComponent<EditableBlock>());
+            groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
         }
         editMode = true;
     }
@@ -228,7 +231,7 @@ public class Ground : MonoBehaviour
     void Update()
     {
         if(editMode){
-            //SaveGround();
+            SaveGround();
         }
     }
 }
