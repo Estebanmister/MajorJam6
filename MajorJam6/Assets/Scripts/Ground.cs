@@ -11,6 +11,7 @@ public class GroundProperty
 
 public class Ground : MonoBehaviour
 {
+    public NutrientMap nutrientMapper;
     public GameObject groundBlockPrefab;
     public GameObject groundWedgePrefab;
     public GameObject groundCornerPrefab;
@@ -29,13 +30,31 @@ public class Ground : MonoBehaviour
             for(int ii = 0; ii < size; ii += 1){
                 GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(i, 0, ii), Quaternion.identity);
                 newBlock.transform.parent = transform;
-                groundEditableBlocks.Add(new Vector3Int(i, 0, ii), newBlock.GetComponent<EditableBlock>());
+                EditableBlock editable = newBlock.GetComponent<EditableBlock>();
+                AssignNutrients(new Vector3Int(i, 0, ii),editable);
+                groundEditableBlocks.Add(new Vector3Int(i, 0, ii), editable);
                 float heightHere =  Mathf.PerlinNoise(((float)i/(float)size)+seed, ((float)ii/(float)size)+seed) * (float)height;
                 for(int h = 0;h <= (int)(heightHere); h+=1){
                     PlaceBlock(new Vector3Int(i, h, ii));
                 }
             }
         }
+        
+    }
+    void AssignNutrients(Vector3Int pos, EditableBlock editable){
+        editable.properties.N = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+552435, ((float)pos.z/(float)size)+seed+552435);
+        if(editable.properties.N < 0.5f){
+            editable.properties.N = 0;
+        }
+        editable.properties.P = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+73467, ((float)pos.z/(float)size)+seed+73467);
+        if(editable.properties.P < 0.5f){
+            editable.properties.P = 0;
+        }
+        editable.properties.K = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+34123, ((float)pos.z/(float)size)+seed+34123);
+        if(editable.properties.K < 0.5f){
+            editable.properties.K = 0;
+        }
+
     }
     public bool PlaceBlock(Vector3Int where){
         // Place a block on the map while in edit mode
@@ -50,11 +69,13 @@ public class Ground : MonoBehaviour
                 newBlock.transform.parent = transform;
                 DestroyImmediate(groundEditableBlocks[where].gameObject);
                 groundEditableBlocks[where] = newBlock.GetComponent<EditableBlock>();
+                AssignNutrients(where,groundEditableBlocks[where]);
             }
         } else {
             GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)where, Quaternion.identity);
             newBlock.transform.parent = transform;
             groundEditableBlocks.Add(where, newBlock.GetComponent<EditableBlock>());
+            AssignNutrients(where,groundEditableBlocks[where]);
         }
         Vector3Int[] positions = {Vector3Int.right, Vector3Int.forward, Vector3Int.back, Vector3Int.left};
         foreach(Vector3Int offset in positions){
@@ -66,6 +87,7 @@ public class Ground : MonoBehaviour
                 GameObject newWedge = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
                 newWedge.transform.parent = transform;
                 groundEditableBlocks.Add(where + offset, newWedge.GetComponent<EditableBlock>());
+                AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
             } else {
                 if(groundEditableBlocks[where + offset].type == 1 ){
                     if(groundEditableBlocks[where+offset].transform.forward != -offset){
@@ -75,12 +97,14 @@ public class Ground : MonoBehaviour
                         newInvCorner.transform.parent = transform;
                         DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
                         groundEditableBlocks[where+offset] = newInvCorner.GetComponent<EditableBlock>();
+                        AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
                     } else {
                         // two opposing wedges make a full block?
                         GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)(where + offset), Quaternion.identity);
                         newBlock.transform.parent = transform;
                         DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
                         groundEditableBlocks[where+offset] = newBlock.GetComponent<EditableBlock>();
+                        AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
                     }
                     
                 } else if (groundEditableBlocks[where + offset].type == 2 ){
@@ -88,6 +112,7 @@ public class Ground : MonoBehaviour
                     newWedge.transform.parent = transform;
                     DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
                     groundEditableBlocks[where+offset] = newWedge.GetComponent<EditableBlock>();
+                    AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
                 }
             }
         }
@@ -103,6 +128,7 @@ public class Ground : MonoBehaviour
                 GameObject newCorner = Instantiate(groundCornerPrefab, (Vector3)(where + offset), Quaternion.LookRotation(positions[i], Vector3.up));
                 newCorner.transform.parent = transform;
                 groundEditableBlocks.Add(where + offset, newCorner.GetComponent<EditableBlock>());
+                AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
             } else {
                 if(groundEditableBlocks[where + offset].type != 0 ){
                     // do something to combine wedges together? or just replace them? idk
@@ -177,6 +203,7 @@ public class Ground : MonoBehaviour
         meshFilterCombine.sharedMesh = new Mesh();
         meshFilterCombine.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshFilterCombine.sharedMesh.CombineMeshes(combineInstances, false, false);
+        GetComponent<MeshCollider>().sharedMesh = meshFilterCombine.sharedMesh;
         groundEditableBlocks.Clear();
         // destroy other meshes
         foreach (Mesh oldMesh in meshes)
@@ -231,7 +258,8 @@ public class Ground : MonoBehaviour
     void Update()
     {
         if(editMode){
-            //SaveGround();
+            SaveGround();
+            nutrientMapper.UpdateMaps();
         }
     }
 }

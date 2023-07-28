@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    
+    public string gameState = "editingTerrain";
 }
