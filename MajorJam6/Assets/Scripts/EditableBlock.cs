@@ -14,6 +14,7 @@ public class EditableBlock : MonoBehaviour
     // only full blocks are important, the others are decoration
     public int type = 0;
     public bool test_thing = false;
+    public bool waterSource = false;
 
     public void UpdateHumidity(){
         if(properties.humidity < 5.0f){

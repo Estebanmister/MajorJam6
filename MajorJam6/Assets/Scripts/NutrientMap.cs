@@ -6,10 +6,13 @@ public class NutrientMap : MonoBehaviour
 {
     Ground ground;
     public bool shown = false;
-    Renderer rend;
     public Texture2D kmap;
     public Texture2D nmap;
     public Texture2D pmap;
+    public GameObject kmapobj;
+    public GameObject pmapobj;
+    public GameObject nmapobj;
+
     public bool t1 = false;
     public bool t2 = false;
     public bool t3 = false;
@@ -21,28 +24,25 @@ public class NutrientMap : MonoBehaviour
         pos.x = ground.size/2;
         pos.z = ground.size/2;
         transform.position = pos;
-        rend = GetComponent<Renderer>();
     }
     float map(float val, float oldmin, float oldmax, float newmin, float newmax){
         return (val - oldmin) * (newmax - newmin) / (oldmax - oldmin) + newmin;
     }
-    public void ShowMap(string nutrient){
+    public void ShowMap(string nutrient, bool hide = false){
         switch(nutrient){
             case "k":
-            rend.material.mainTexture = kmap;
+            kmapobj.SetActive(!hide);
             break;
             case "n":
-            rend.material.mainTexture = nmap;
+            nmapobj.SetActive(!hide);
             break;
             case "p":
-            rend.material.mainTexture = pmap;
+            pmapobj.SetActive(!hide);
             break;
         }
-        rend.enabled = true;
         shown = true;
     }
     public void UpdateMaps(){
-        Texture2D tex = rend.material.mainTexture as Texture2D;
         int size = ground.size;
         transform.localScale = new Vector3(0.1f*size,1,0.1f*size);
         kmap.Reinitialize(size,size);
@@ -87,9 +87,6 @@ public class NutrientMap : MonoBehaviour
         
     }
     void Update(){
-        if(!shown && rend.enabled){
-            rend.enabled = false;
-        }
         if(t1){
             t1 = false;
             ShowMap("k");

@@ -16,7 +16,6 @@ public class WaterPlacer : MonoBehaviour
         PlaceWaterBlock(where);
         GameObject newLake = Instantiate(lakePrefab);
         Lake newLakeCom = newLake.GetComponent<Lake>();
-        newLakeCom.surroundingBlocks = surroundingBlocks;
         MeshFilter meshFilter = newLake.GetComponent<MeshFilter>();
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
