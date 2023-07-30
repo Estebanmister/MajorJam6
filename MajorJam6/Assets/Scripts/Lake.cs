@@ -25,6 +25,7 @@ public class Lake : MonoBehaviour
             ground.LoadGround();
             foreach(Vector3Int blockpos in affectedBlocks){
                 ground.groundEditableBlocks[blockpos].properties.humidity = 0;
+                ground.groundEditableBlocks[blockpos].properties.markedForUpdate = true;
             }
             Destroy(gameObject);
         }

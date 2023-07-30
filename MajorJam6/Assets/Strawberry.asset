@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
+  m_Name: Strawberry
+  m_EditorClassIdentifier: 
+  plantName: Strawberry
+  K_consumption: 1
+  P_consumption: 0
+  N_consumption: 0
+  K_release: 0
+  P_release: 0
+  N_release: 1.2
+  growthCycle: 1
+  minTemp: 16
+  maxTemp: 35
+  minHumid: 50
+  maxHumid: 100
+  shadeRadius: 3
+  humidityToWater: 0
+  waterToHumidity: 0
+  reproduces: 1
+  reproduction_radius: 3
+  edible: 1
+  attractivenessMultiplier: 2

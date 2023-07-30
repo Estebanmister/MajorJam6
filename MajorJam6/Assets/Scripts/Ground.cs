@@ -7,6 +7,7 @@ public class GroundProperty
 {
     public float humidity;
     public float K, N, P;
+    public bool markedForUpdate = false;
 }
 
 public class Ground : MonoBehaviour
@@ -19,6 +20,7 @@ public class Ground : MonoBehaviour
     public int size = 10;
     public int height = 4;
     public float seed = 0;
+    public Dictionary<Vector2Int, StaticEntity> plants = new Dictionary<Vector2Int, StaticEntity>();
     public Dictionary<Vector3Int, GroundProperty> groundBlocksProp = new Dictionary<Vector3Int, GroundProperty>();
 
     public Dictionary<Vector3Int, EditableBlock> groundEditableBlocks = new Dictionary<Vector3Int, EditableBlock>();
@@ -28,11 +30,6 @@ public class Ground : MonoBehaviour
     public void Generate(){
         for(int i = 0; i < size; i += 1){
             for(int ii = 0; ii < size; ii += 1){
-                GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(i, 0, ii), Quaternion.identity);
-                newBlock.transform.parent = transform;
-                EditableBlock editable = newBlock.GetComponent<EditableBlock>();
-                AssignNutrients(new Vector3Int(i, 0, ii),editable);
-                groundEditableBlocks.Add(new Vector3Int(i, 0, ii), editable);
                 float heightHere =  Mathf.PerlinNoise(((float)i/(float)size)+seed, ((float)ii/(float)size)+seed) * (float)height;
                 for(int h = 0;h <= (int)(heightHere); h+=1){
                     PlaceBlock(new Vector3Int(i, h, ii));
@@ -46,14 +43,17 @@ public class Ground : MonoBehaviour
         if(editable.properties.N < 0.5f){
             editable.properties.N = 0;
         }
+        editable.properties.N *= 2;
         editable.properties.P = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+73467, ((float)pos.z/(float)size)+seed+73467);
         if(editable.properties.P < 0.5f){
             editable.properties.P = 0;
         }
+        editable.properties.P *= 2;
         editable.properties.K = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+34123, ((float)pos.z/(float)size)+seed+34123);
         if(editable.properties.K < 0.5f){
             editable.properties.K = 0;
         }
+        editable.properties.K *= 5;
 
     }
     public bool PlaceBlock(Vector3Int where){
@@ -98,7 +98,7 @@ public class Ground : MonoBehaviour
                         DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
                         groundEditableBlocks[where+offset] = newInvCorner.GetComponent<EditableBlock>();
                         AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
-                    } else {
+                    } else{
                         // two opposing wedges make a full block?
                         GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)(where + offset), Quaternion.identity);
                         newBlock.transform.parent = transform;
@@ -135,6 +135,28 @@ public class Ground : MonoBehaviour
                 }
             }
             i += 1;
+        }
+        Vector3Int[] cornersAndSides = {Vector3Int.forward+Vector3Int.right, Vector3Int.forward+Vector3Int.left, Vector3Int.back+ Vector3Int.right, Vector3Int.back+Vector3Int.left,Vector3Int.right, Vector3Int.forward, Vector3Int.back, Vector3Int.left};
+        foreach(Vector3Int pos in cornersAndSides){
+            Vector3Int offset = pos + Vector3Int.down;
+            if((where+offset).x >= size-1 || (where+offset).y >= size-1 || (where+offset).z >= size-1 || 
+                (where+offset).x < 0 || (where+offset).y < 0 || (where+offset).z < 0){
+                continue;
+            }
+            if(!groundEditableBlocks.ContainsKey(where + offset)){
+                GameObject newBlock = Instantiate(groundWedgePrefab, (Vector3)(where + offset), Quaternion.LookRotation(offset, Vector3.up));
+                newBlock.transform.parent = transform;
+                groundEditableBlocks.Add(where + offset, newBlock.GetComponent<EditableBlock>());
+                AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
+            } else {
+                if(groundEditableBlocks[where + offset].type != 0 ){
+                    GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)(where + offset), Quaternion.identity);
+                    newBlock.transform.parent = transform;
+                    DestroyImmediate(groundEditableBlocks[where+offset].gameObject);
+                    groundEditableBlocks[where+offset] = newBlock.GetComponent<EditableBlock>();
+                    AssignNutrients(where + offset,groundEditableBlocks[where + offset]);
+                }
+            }
         }
         return true;
     }
@@ -253,13 +275,16 @@ public class Ground : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         Generate();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
+    public void SwitchMode(){
         if(editMode){
             SaveGround();
             nutrientMapper.UpdateMaps();
+        } else {
+            LoadGround();
         }
+    }
+    // Update is called once per frame
+    void Update()
+    {
     }
 }

@@ -18,10 +18,16 @@ MonoBehaviour:
   N_consumption: 0
   K_release: 0
   P_release: 0
-  N_release: 1
+  N_release: 0.5
   growthCycle: 1
   minTemp: 16
   maxTemp: 35
   minHumid: 30
   maxHumid: 100
   shadeRadius: 0
+  humidityToWater: 0
+  waterToHumidity: 0
+  reproduces: 0
+  reproduction_radius: 0
+  edible: 0
+  attractivenessMultiplier: 1

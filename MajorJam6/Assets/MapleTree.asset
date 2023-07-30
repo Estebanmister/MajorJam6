@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
+  m_Name: MapleTree
+  m_EditorClassIdentifier: 
+  plantName: tree_maple
+  K_consumption: 0
+  P_consumption: 0
+  N_consumption: 1
+  K_release: 1
+  P_release: 0
+  N_release: 0
+  growthCycle: 2
+  minTemp: 0
+  maxTemp: 40
+  minHumid: 5
+  maxHumid: 100
+  shadeRadius: 0
+  requirement: 
+  humidityToWater: 0
+  waterToHumidity: 0
+  reproduces: 1
+  reproduction_radius: 8
+  edible: 1
+  attractivenessMultiplier: 1
