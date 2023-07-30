@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8991230790608243308}
   - component: {fileID: 8202830842190970103}
+  - component: {fileID: -5226519552211715769}
   m_Layer: 0
   m_Name: Bluebonnet
-  m_TagString: Untagged
+  m_TagString: plant
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,9 +49,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b3fd08f493294459d5d2181bb10152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 10
   plantType: {fileID: 11400000, guid: c942c5f66abcea64eaa82c767cc2f31d, type: 2}
   ground: {fileID: 0}
+  world: {fileID: 0}
   growth: {fileID: 0}
+  ghost: 1
+  mypos: {x: 0, y: 0, z: 0}
+--- !u!65 &-5226519552211715769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360019318245330603}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4495949947243838563
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +87,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1661682286299331758
 Transform:
   m_ObjectHideFlags: 0
@@ -78,7 +96,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4495949947243838563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 0.099999994, y: 1, z: 0.099999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -178,7 +196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00087677717
+      value: -0.467
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.z
@@ -404,7 +422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00087677717
+      value: -0.467
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.z
@@ -630,7 +648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00087677717
+      value: -0.467
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a6eb95869d4c7e84ca9189765244bb96, type: 3}
       propertyPath: m_LocalPosition.z

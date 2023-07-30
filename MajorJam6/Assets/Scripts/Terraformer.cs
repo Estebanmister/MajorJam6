@@ -16,23 +16,29 @@ public class Terraformer : MonoBehaviour
     public void BeginPlaceBlock(){
         DestroyImmediate(blockGhost);
         blockGhost = Instantiate(blockprefab);
-        placingBlock = true;
+        placingBlock = !placingBlock;
+        deletingBlock = false;
+        deletingBlock = false;
     }
     void Start(){
         ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
         waterPlacer = GameObject.FindGameObjectWithTag("waterplacer").GetComponent<WaterPlacer>();
     }
     public void BeginDeleteBlock(){
-        deletingBlock = true;
+        deletingBlock = !deletingBlock;
+        placingWater = false;
+        placingBlock = false;
     }
     public void BeginWaterPlace(){
-        placingWater = true;
+        placingWater = !placingWater;
+        deletingBlock = false;
+        placingBlock = false;
     }
     void Update()
     {
         RaycastHit hit;
         if(placingBlock){
-            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("Default"))){
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("groundBlock"))){
                 Vector3Int pos = Vector3Int.RoundToInt(hit.transform.position+Vector3Int.RoundToInt(hit.normal));
                 blockGhost.transform.position = pos;
                 if(Input.GetMouseButtonDown(0)){
@@ -51,7 +57,7 @@ public class Terraformer : MonoBehaviour
             }
         }
         if(deletingBlock){
-            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("Default"))){
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("groundBlock"))){
                 Vector3Int pos = Vector3Int.RoundToInt(hit.transform.position);
                 if(Input.GetMouseButtonDown(0)){
                     Debug.Log(pos);
@@ -68,7 +74,7 @@ public class Terraformer : MonoBehaviour
             }
         }
         if(placingWater){
-            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("Default"))){
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("groundBlock"))){
                 Vector3Int pos = Vector3Int.RoundToInt(hit.transform.position+Vector3.up);
                 waterPlateThing.SetActive(true);
                 waterPlateThing.transform.localScale = new Vector3(ground.size*0.1f, 1, ground.size*0.1f);

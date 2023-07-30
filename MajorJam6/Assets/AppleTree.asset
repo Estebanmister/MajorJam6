@@ -23,7 +23,7 @@ MonoBehaviour:
   minTemp: 0
   maxTemp: 40
   minHumid: 5
-  maxHumid: 100
+  maxHumid: 99
   shadeRadius: 0
   requirement: 
   humidityToWater: 0

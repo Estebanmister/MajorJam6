@@ -22,11 +22,13 @@ MonoBehaviour:
   growthCycle: 2
   minTemp: 16
   maxTemp: 35
-  minHumid: 50
-  maxHumid: 100
+  minHumid: 20
+  maxHumid: 99
   shadeRadius: 0
+  requirement: 
   humidityToWater: 0
   waterToHumidity: 0
   reproduces: 1
   reproduction_radius: 5
   edible: 1
+  attractivenessMultiplier: 1

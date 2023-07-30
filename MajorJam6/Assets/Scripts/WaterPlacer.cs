@@ -38,9 +38,11 @@ public class WaterPlacer : MonoBehaviour
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.CombineMeshes(combine);
         meshFilter.sharedMesh = mesh;
+        newLakeCom.affectedBlocks = surroundingBlocks.ToArray();
         newLakeCom.volume = occupiedSpace.Count;
         newLakeCom.maxVolume = occupiedSpace.Count;
         newLakeCom.level = surface-(depth-1);
+        newLakeCom.ground = ground;
         occupiedSpace.Clear();
         surface = 0;
     }

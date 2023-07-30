@@ -12,7 +12,7 @@ public class PlantScriptable : ScriptableObject
     public float maxTemp;
     public float minHumid;
     public float maxHumid;
-    public float shadeRadius;
+    public int shadeRadius;
     public string requirement;
     public float humidityToWater;
     public float waterToHumidity;

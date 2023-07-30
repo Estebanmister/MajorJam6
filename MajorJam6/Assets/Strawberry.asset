@@ -22,9 +22,10 @@ MonoBehaviour:
   growthCycle: 1
   minTemp: 16
   maxTemp: 35
-  minHumid: 50
-  maxHumid: 100
+  minHumid: 20
+  maxHumid: 99
   shadeRadius: 3
+  requirement: 
   humidityToWater: 0
   waterToHumidity: 0
   reproduces: 1

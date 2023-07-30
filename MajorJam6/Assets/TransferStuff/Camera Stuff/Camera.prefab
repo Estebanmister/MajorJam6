@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1095043026396337802}
   - component: {fileID: 1095043026396337801}
-  - component: {fileID: 1095043026396337800}
+  - component: {fileID: -4940331871518268110}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -76,14 +76,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1095043026396337800
-AudioListener:
+--- !u!114 &-4940331871518268110
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095043026396337807}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
 --- !u!1 &8347408465359043332
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8347408465359043330}
   - component: {fileID: 8347408465359043343}
+  - component: {fileID: 6045081956817408113}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -129,6 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3167981ef268c444081bad74f153e630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 0}
   cam: {fileID: 1095043026396337807}
   moveSpeed: 25
   zoomSpeed: 25
@@ -137,3 +144,34 @@ MonoBehaviour:
   rotationSpeed: 2
   minX: 0
   maxX: 80
+--- !u!114 &6045081956817408113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8347408465359043332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 4128114
+      Data2: 1256601040
+      Data3: 1897396864
+      Data4: -987000216
+    Path: event:/Dynamic Music
+  Event: 
+  PlayEvent: 1
+  StopEvent: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 181.03656

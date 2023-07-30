@@ -37,24 +37,4 @@ public class EditableBlock : MonoBehaviour
     {
           
     }
-    void Update()
-    {
-        if(test_thing){
-            UpdateHumidity();
-            test_thing = false;
-        }
-        // update properties constantly while on update loop because the player will be actively editing this
-        if(properties.humidity <= 100){
-            meshRenderer.material = types[0]; 
-        }
-        if(properties.humidity < 51){
-            meshRenderer.material = types[1]; 
-        }
-        if(properties.humidity < 26){
-            meshRenderer.material = types[2]; 
-        }
-        if(properties.humidity < 5){
-            meshRenderer.material = types[3]; 
-        }
-    }
 }

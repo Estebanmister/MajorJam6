@@ -9,11 +9,128 @@ public class StaticEntity : MonoBehaviour
     public Ground ground;
     public World world;
     public Animator growth;
-    public bool ghost = true;
+    public bool ghost{
+        get { return _ghost;}
+        set { _ghost = ghost;
+               if(_ghost) MusicStart();}
+    }
+    bool _ghost = true;
     float cycleAge = 0;
     float updateRate = 10;
     public Vector3Int mypos;
+    void MusicStart(){
+        string id = "";
+        print(plantType.plantName);
+        switch (plantType.plantName){
+        case "tree_apple":
+        id = "ifApple";
+        break;
+        case "Bluebonnet":
+        id = "ifBluebonnet";
+        break;
+        case "Cabbage":
+        id = "ifCabbage";
+        break;
+        case "Carrot":
+        id = "ifCarrot";
+        break;
+        case "tree_cherry":
+        id = "ifCherry";
+        break;
+        case "Dahlia":
+        id = "ifDahlia";
+        break;
+        case "Heather":
+        id = "ifHeather";
+        break;
+        case "tree_maple":
+        id = "ifMaple";
+        break;
+        case "tree_oak":
+        id = "ifOak";
+        break;
+        case "tree_pine":
+        id = "ifPine";
+        break;
+        case "Poppy":
+        id = "ifPoppy";
+        break;
+        case "Strawberry":
+        id = "ifLegume";
+        break;
+        case "Yam":
+        id = "ifYam";
+        break;
+    }
+    print(id);
+    Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 1));
+    }
+    void OnDestroy(){
+        if(ghost){
+            return;
+        }
+        Debug.Log("disable");
+        // check if any plants of the same type are left
+        bool left = false;
+        foreach(StaticEntity staticEntity in ground.plants.Values){
+            if(staticEntity == this){
+                continue;
+            }
+            if(staticEntity.plantType == plantType){
+                left = true;
+            }
+        }
+        if(!left){
+            string id = "";
+            switch (plantType.plantName){
+                case "tree_apple":
+                id = "ifApple";
+                break;
+                case "Bluebonnet":
+                id = "ifBluebonnet";
+                break;
+                case "Cabbage":
+                id = "ifCabbage";
+                break;
+                case "Carrot":
+                id = "ifCarrot";
+                break;
+                case "tree_cherry":
+                id = "ifCherry";
+                break;
+                case "Dahlia":
+                id = "ifDahlia";
+                break;
+                case "Heather":
+                id = "ifHeather";
+                break;
+                case "tree_maple":
+                id = "ifMaple";
+                break;
+                case "tree_oak":
+                id = "ifOak";
+                break;
+                case "tree_pine":
+                id = "ifPine";
+                break;
+                case "Poppy":
+                id = "ifPoppy";
+                break;
+                case "Strawberry":
+                id = "ifLegume";
+                break;
+                case "Yam":
+                id = "ifYam";
+                break;
+            }
+
+            Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 0));
+        }
+    }
     public string CheckTerrain(Vector3Int positionToCheck){
+        if(!ground.groundBlocksProp.ContainsKey(positionToCheck)){
+            return "not there";
+        }
         if(ground.groundBlocksProp[positionToCheck].N < plantType.N_consumption){
             return "Not enough nitrogen!";
         }
@@ -30,15 +147,18 @@ public class StaticEntity : MonoBehaviour
         
         if(plantType.shadeRadius != 0){
             bool shaded = false;
-            for(int i = 0; i < plantType.shadeRadius; i+=1){
-                for(int ii = 0; ii < plantType.shadeRadius; ii+=1){
+            for(int i = positionToCheck.x-plantType.shadeRadius; i <= positionToCheck.x+plantType.shadeRadius; i+=1){
+                for(int ii = positionToCheck.y-plantType.shadeRadius; ii <= positionToCheck.y+plantType.shadeRadius; ii+=1){
+                    if(!ground.plants.ContainsKey(new Vector2Int(i,ii))){
+                        continue;
+                    }
                     if(plantType.requirement != ""){
-                        if(ground.plants[new Vector2Int(i,ii)].plantType.name.StartsWith(plantType.requirement)){
+                        if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith(plantType.requirement)){
                             shaded = true;
                             break;
                         }
                     } else{
-                        if(ground.plants[new Vector2Int(i,ii)].plantType.name.StartsWith("tree_")){
+                        if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
                             shaded = true;
                             break;
                         }
@@ -105,12 +225,12 @@ public class StaticEntity : MonoBehaviour
                 for(int i = 0; i < plantType.shadeRadius; i+=1){
                     for(int ii = 0; ii < plantType.shadeRadius; ii+=1){
                         if(plantType.requirement != ""){
-                            if(ground.plants[new Vector2Int(i,ii)].plantType.name.StartsWith(plantType.requirement)){
+                            if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith(plantType.requirement)){
                                 shaded = true;
                                 break;
                             }
                         } else{
-                            if(ground.plants[new Vector2Int(i,ii)].plantType.name.StartsWith("tree_")){
+                            if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
                                 shaded = true;
                                 break;
                             }
@@ -130,7 +250,7 @@ public class StaticEntity : MonoBehaviour
                 myblock.N += plantType.N_release;
                 myblock.P += plantType.P_release;
                 myblock.K += plantType.K_release;
-                if(plantType.name == "tree_apple"){
+                if(plantType.plantName == "tree_apple"){
                     plantType.edible = true;
                 }
                 if(plantType.reproduces){

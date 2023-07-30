@@ -8,6 +8,9 @@ public class GroundProperty
     public float humidity;
     public float K, N, P;
     public bool markedForUpdate = false;
+    public Vector3Int pos;
+    public int type;
+    public Quaternion specialRotation;
 }
 
 public class Ground : MonoBehaviour
@@ -24,6 +27,11 @@ public class Ground : MonoBehaviour
     public Dictionary<Vector3Int, GroundProperty> groundBlocksProp = new Dictionary<Vector3Int, GroundProperty>();
 
     public Dictionary<Vector3Int, EditableBlock> groundEditableBlocks = new Dictionary<Vector3Int, EditableBlock>();
+    public EditableBlock[] editableBlocksList;
+
+    // !!! ONLY ACCESSIBLE AT PLANTING MODE !!!
+    public GroundProperty[] groundPropertyArray;
+
     public MeshFilter combinedGround;
     MeshRenderer meshRenderer;
     public bool editMode = true;
@@ -36,6 +44,9 @@ public class Ground : MonoBehaviour
                 }
             }
         }
+        editableBlocksList = new EditableBlock[groundEditableBlocks.Values.Count];
+        groundEditableBlocks.Values.CopyTo(editableBlocksList,0);
+        nutrientMapper.UpdateMaps();
         
     }
     void AssignNutrients(Vector3Int pos, EditableBlock editable){
@@ -43,18 +54,30 @@ public class Ground : MonoBehaviour
         if(editable.properties.N < 0.5f){
             editable.properties.N = 0;
         }
-        editable.properties.N *= 2;
+        editable.properties.N *= 10;
         editable.properties.P = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+73467, ((float)pos.z/(float)size)+seed+73467);
         if(editable.properties.P < 0.5f){
             editable.properties.P = 0;
         }
-        editable.properties.P *= 2;
+        editable.properties.P *= 10;
         editable.properties.K = Mathf.PerlinNoise(((float)pos.x/(float)size)+seed+34123, ((float)pos.z/(float)size)+seed+34123);
         if(editable.properties.K < 0.5f){
             editable.properties.K = 0;
         }
-        editable.properties.K *= 5;
-
+        editable.properties.K *= 10;
+        editable.properties.type = editable.type;
+        if(editMode){
+            if(groundBlocksProp.ContainsKey(pos)){
+                editable.properties.pos = pos;
+                editable.properties.specialRotation = editable.transform.rotation;
+                groundBlocksProp[pos] = editable.properties;
+            } else {
+                editable.properties.pos = pos;
+                editable.properties.specialRotation = editable.transform.rotation;
+                groundBlocksProp.Add(pos, editable.properties);
+            }
+        }
+        
     }
     public bool PlaceBlock(Vector3Int where){
         // Place a block on the map while in edit mode
@@ -164,6 +187,7 @@ public class Ground : MonoBehaviour
         // thanks to Bunzaga on the forums for the help with this holy fuck
 
         List<Material> materials = new List<Material>();
+        MeshFilter meshFilterCombine = gameObject.GetComponent<MeshFilter>();
         ArrayList combineInstanceArrays = new ArrayList();
         MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
         groundBlocksProp.Clear();
@@ -174,6 +198,10 @@ public class Ground : MonoBehaviour
             {
                 continue;
             }
+            if(meshFilter == meshFilterCombine){
+                continue;
+            }
+            meshFilter.GetComponent<EditableBlock>().properties.pos = Vector3Int.FloorToInt(meshFilter.transform.position);
             groundBlocksProp.Add(Vector3Int.FloorToInt(meshFilter.transform.position),meshFilter.GetComponent<EditableBlock>().properties);
             for (int s = 0; s < meshFilter.sharedMesh.subMeshCount; s++)
             {
@@ -197,9 +225,10 @@ public class Ground : MonoBehaviour
                 (combineInstanceArrays[materialArrayIndex] as ArrayList).Add(combineInstance);
             }
         }
-
+        groundPropertyArray = new GroundProperty[groundBlocksProp.Values.Count];
+        groundBlocksProp.Values.CopyTo(groundPropertyArray, 0);
         // attached to this gameobject
-        MeshFilter meshFilterCombine = gameObject.GetComponent<MeshFilter>();
+        
         MeshRenderer meshRendererCombine = gameObject.GetComponent<MeshRenderer>();
 
         // create lists of meshes according to their material
@@ -245,6 +274,7 @@ public class Ground : MonoBehaviour
             }
             DestroyImmediate(meshFilter.gameObject);
         }
+        meshRenderer.enabled = true;
         editMode = false;
         }
 
@@ -261,14 +291,38 @@ public class Ground : MonoBehaviour
     public void LoadGround(){
         // load the ground for editing
         meshRenderer.enabled = false;
+        groundEditableBlocks.Clear();
         foreach(Vector3Int position in groundBlocksProp.Keys){
             GroundProperty property = groundBlocksProp[position];
-            GameObject newBlock = Instantiate(groundBlockPrefab, new Vector3(position.x, position.y, position.z), Quaternion.identity);
-            newBlock.transform.parent = transform;
-            newBlock.GetComponent<EditableBlock>().properties = property;
-            groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
+            if(property.type == 0){
+                GameObject newBlock = Instantiate(groundBlockPrefab, (Vector3)position, property.specialRotation);
+                newBlock.transform.parent = transform;
+                groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
+                
+            }
+            if(property.type == 1){
+                GameObject newBlock = Instantiate(groundWedgePrefab, (Vector3)position, property.specialRotation);
+                newBlock.transform.parent = transform;
+                groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
+                
+            }
+            if(property.type == 2){
+                GameObject newBlock = Instantiate(groundCornerPrefab, (Vector3)position, property.specialRotation);
+                newBlock.transform.parent = transform;
+                groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
+                
+            }
+            if(property.type == 3){
+                GameObject newBlock = Instantiate(groundInvCornerPrefab, (Vector3)position, property.specialRotation);
+                newBlock.transform.parent = transform;
+                groundEditableBlocks.Add(position, newBlock.GetComponent<EditableBlock>());
+                
+            }
+            groundEditableBlocks[position].properties = property;
+            groundEditableBlocks[position].test_thing = true;
         }
-        editMode = true;
+        editableBlocksList = new EditableBlock[groundEditableBlocks.Values.Count];
+        groundEditableBlocks.Values.CopyTo(editableBlocksList,0);
     }
     void Start()
     {
@@ -278,13 +332,35 @@ public class Ground : MonoBehaviour
     public void SwitchMode(){
         if(editMode){
             SaveGround();
-            nutrientMapper.UpdateMaps();
+            editMode = false;
         } else {
             LoadGround();
+            editMode = true;
         }
     }
     // Update is called once per frame
     void Update()
     {
+        if(editMode){
+            foreach(EditableBlock editableBlock in editableBlocksList){
+                if(editableBlock.test_thing){
+                    editableBlock.UpdateHumidity();
+                    if(editableBlock.properties.humidity <= 100){
+                        editableBlock.meshRenderer.material = editableBlock.types[0]; 
+                    }
+                    if(editableBlock.properties.humidity < 51){
+                        editableBlock.meshRenderer.material = editableBlock.types[1]; 
+                    }
+                    if(editableBlock.properties.humidity < 26){
+                        editableBlock.meshRenderer.material = editableBlock.types[2]; 
+                    }
+                    if(editableBlock.properties.humidity < 5){
+                        editableBlock.meshRenderer.material = editableBlock.types[3]; 
+                    }
+                    editableBlock.test_thing = false;
+                }
+            }
+        } else {
+        }
     }
 }

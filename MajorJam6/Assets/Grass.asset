@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  plantName: Grass
+  plantName: grass
   K_consumption: 0.1
   P_consumption: 0.1
   N_consumption: 0
@@ -22,8 +22,13 @@ MonoBehaviour:
   growthCycle: 1
   minTemp: 16
   maxTemp: 35
-  minHumid: 25
-  maxHumid: 100
+  minHumid: 1
+  maxHumid: 99
   shadeRadius: 0
+  requirement: 
   humidityToWater: 0
   waterToHumidity: 0
+  reproduces: 0
+  reproduction_radius: 0
+  edible: 0
+  attractivenessMultiplier: 1

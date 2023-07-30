@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class CameraShmoover : MonoBehaviour
 {
+    [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject cam;
     [SerializeField] float moveSpeed;
     [SerializeField] float zoomSpeed;
@@ -35,6 +36,12 @@ public class CameraShmoover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
+        if(pauseMenu.activeSelf){
+            return;
+        }
         cam.GetComponent<Camera>().orthographicSize = zoomAmt;
         //cam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = zoomAmt; //If using perspective, comment this line out.
         if (!lockedCam)
@@ -46,6 +53,7 @@ public class CameraShmoover : MonoBehaviour
         }
         Rotate();
         Zoom();
+        
     }
 
     //Locked Cam is for if you want to focus on an element in the world, it locks the location of the camera while allowing you to rotate around it and zoom in and out
