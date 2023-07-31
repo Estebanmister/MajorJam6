@@ -6,9 +6,10 @@ using TMPro;
 
 public class SettingsMaster : MonoBehaviour
 {
-    int size = 10;
+    int size = 25;
     public TMP_Text text;
     public bool debug = false;
+    bool check = false;
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -31,15 +32,12 @@ public class SettingsMaster : MonoBehaviour
     }
     public void LoadMenuScene(){
         SceneManager.LoadScene("menu");
+        Destroy(gameObject);
+    }
+    void Update(){
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode){
-        foreach(GameObject manager in GameObject.FindGameObjectsWithTag("manager")){
-            if (manager == gameObject){
-                continue;
-            } else {
-                Destroy(gameObject);
-            }
-        }
+        check = true;
         Ground ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
         ground.size = size;
         ground.Generate(Random.Range(0,99999));
