@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
-  m_Name: Grass
+  m_Name: Dahlia
   m_EditorClassIdentifier: 
-  plantName: grass
-  K_consumption: 0.1
-  P_consumption: 0.1
+  plantName: Dahlia
+  K_consumption: 1
+  P_consumption: 0
   N_consumption: 0
   K_release: 0
   P_release: 0
-  N_release: 0.1
+  N_release: 0.5
   growthCycle: 1
   minTemp: 16
   maxTemp: 35
-  minHumid: 1
-  maxHumid: 99
-  shadeRadius: 0
+  minHumid: 10
+  maxHumid: 70
+  shadeRadius: 5
   requirement: 
   humidityToWater: 0
   waterToHumidity: 0

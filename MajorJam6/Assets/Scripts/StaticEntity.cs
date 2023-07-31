@@ -11,10 +11,10 @@ public class StaticEntity : MonoBehaviour
     public Animator growth;
     public bool ghost{
         get { return _ghost;}
-        set { _ghost = ghost;
+        set { _ghost = value;
                if(_ghost) MusicStart();}
     }
-    bool _ghost = true;
+    [SerializeField] bool _ghost = true;
     float cycleAge = 0;
     float updateRate = 10;
     public Vector3Int mypos;
@@ -63,7 +63,10 @@ public class StaticEntity : MonoBehaviour
         break;
     }
     print(id);
-    Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 1));
+    if(id != ""){
+        Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 1));
+    }
+    
     }
     void OnDestroy(){
         if(ghost){
@@ -124,12 +127,14 @@ public class StaticEntity : MonoBehaviour
                 break;
             }
 
-            Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 0));
+            if(id != ""){
+                Debug.Log(FMODUnity.RuntimeManager.StudioSystem.setParameterByName(id, 0));
+            }
         }
     }
     public string CheckTerrain(Vector3Int positionToCheck){
         if(!ground.groundBlocksProp.ContainsKey(positionToCheck)){
-            return "not there";
+            return "There is nothing there!";
         }
         if(ground.groundBlocksProp[positionToCheck].N < plantType.N_consumption){
             return "Not enough nitrogen!";
@@ -144,24 +149,21 @@ public class StaticEntity : MonoBehaviour
             ground.groundBlocksProp[positionToCheck].humidity > plantType.maxHumid){
             return "Humidity is not right!";
         }
+        if(ground.plants.ContainsKey(new Vector2Int(positionToCheck.x,positionToCheck.z))){
+            return "There is already a plant there!";
+        }
         
         if(plantType.shadeRadius != 0){
             bool shaded = false;
             for(int i = positionToCheck.x-plantType.shadeRadius; i <= positionToCheck.x+plantType.shadeRadius; i+=1){
-                for(int ii = positionToCheck.y-plantType.shadeRadius; ii <= positionToCheck.y+plantType.shadeRadius; ii+=1){
+                for(int ii = positionToCheck.z-plantType.shadeRadius; ii <= positionToCheck.z+plantType.shadeRadius; ii+=1){
                     if(!ground.plants.ContainsKey(new Vector2Int(i,ii))){
                         continue;
                     }
-                    if(plantType.requirement != ""){
-                        if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith(plantType.requirement)){
-                            shaded = true;
-                            break;
-                        }
-                    } else{
-                        if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
-                            shaded = true;
-                            break;
-                        }
+                    Debug.Log(ground.plants[new Vector2Int(i,ii)].plantType.plantName);
+                    if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
+                        shaded = true;
+                        break;
                     }
                 }
                 if(shaded){
@@ -187,17 +189,21 @@ public class StaticEntity : MonoBehaviour
             //animate
         }
         if(!ghost){
+            if(health < 0){
+                ground.plants.Remove(new Vector2Int(mypos.x,mypos.z));
+                Destroy(gameObject);
+            }
             GroundProperty myblock = ground.groundBlocksProp[mypos+Vector3Int.down];
             cycleAge += Time.deltaTime * world.TimeMultiplier;
             if(plantType.humidityToWater < world.humidity){
-                myblock.humidity = plantType.humidityToWater;
+                myblock.humidity += (plantType.humidityToWater/100) * Time.deltaTime * world.TimeMultiplier;
                 myblock.markedForUpdate = true;
-                world.humidity -= plantType.humidityToWater;
+                world.humidity -= (plantType.humidityToWater/100) * Time.deltaTime * world.TimeMultiplier;
             }
             if(plantType.waterToHumidity < myblock.humidity){
-                myblock.humidity -= plantType.waterToHumidity;
+                myblock.humidity -= (plantType.waterToHumidity/100) * Time.deltaTime * world.TimeMultiplier;
                 myblock.markedForUpdate = true;
-                world.humidity += plantType.waterToHumidity;
+                world.humidity += (plantType.waterToHumidity/100) * Time.deltaTime * world.TimeMultiplier;
             }
             if(myblock.humidity < plantType.minHumid){
                 health -= Time.deltaTime;
@@ -206,35 +212,32 @@ public class StaticEntity : MonoBehaviour
                 health -= Time.deltaTime;
             }
             if(myblock.N > 0){
-                myblock.N -= plantType.N_consumption/(plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds);
+                myblock.N -= (plantType.N_consumption/((plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds))*Time.deltaTime *world.TimeMultiplier);
             } else if(plantType.N_consumption > 0){
                 health -= Time.deltaTime;
             }
             if(myblock.K > 0){
-                myblock.K -= plantType.K_consumption/(plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds);
+                myblock.K -= (plantType.K_consumption/((plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds))*Time.deltaTime *world.TimeMultiplier);
             } else if(plantType.K_consumption > 0){
                 health -= Time.deltaTime;
             }
             if(myblock.P > 0){
-                myblock.P -= plantType.P_consumption/(plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds);
+                myblock.P -= (plantType.P_consumption/((plantType.growthCycle*world.WeekLengthDays*world.DayLengthSeconds))*Time.deltaTime *world.TimeMultiplier);
             } else if(plantType.P_consumption > 0){
                 health -= Time.deltaTime;
             }
             if(plantType.shadeRadius != 0){
                 bool shaded = false;
-                for(int i = 0; i < plantType.shadeRadius; i+=1){
-                    for(int ii = 0; ii < plantType.shadeRadius; ii+=1){
-                        if(plantType.requirement != ""){
-                            if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith(plantType.requirement)){
-                                shaded = true;
-                                break;
-                            }
-                        } else{
+                for(int i = mypos.x-plantType.shadeRadius; i <= mypos.x+plantType.shadeRadius; i+=1){
+                    for(int ii = mypos.z-plantType.shadeRadius; ii <= mypos.z+plantType.shadeRadius; ii+=1){
+                        if(ground.plants.ContainsKey(new Vector2Int(i,ii))){
+                            Debug.Log(ground.plants[new Vector2Int(i,ii)].plantType.plantName);
                             if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
                                 shaded = true;
                                 break;
                             }
                         }
+                        
                         
                     }
                     if(shaded){

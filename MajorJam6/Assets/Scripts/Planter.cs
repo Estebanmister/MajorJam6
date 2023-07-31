@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class Planter : MonoBehaviour
 {
+    public TMP_Text warningtext;
     public bool placing = false;
     public bool animal = false;
     public bool removing = false;
-    public GameObject warning;
     public GameObject prefabToPlace;
     public GameObject ghostPlace;
     public Ground ground;
@@ -42,7 +42,7 @@ public class Planter : MonoBehaviour
     {
         RaycastHit hit;
         if(removing){
-            warning.SetActive(true);
+            warningtext.text = "Removing Plants";
             if (Input.GetMouseButtonDown(0)){
                 if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("Default"))){
                     if(hit.transform.tag == "plant"){
@@ -55,11 +55,10 @@ public class Planter : MonoBehaviour
                 }
             }
             if(Input.GetMouseButtonDown(1)){
-                warning.SetActive(false);
+                warningtext.text = "";
                 removing = false;
             }
         }else if(placing){
-            warning.SetActive(false);
             if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("ground"))){
                 Vector3Int pos = Vector3Int.RoundToInt(hit.point);
                 pos.y = Vector3Int.CeilToInt(hit.point).y;
@@ -78,6 +77,7 @@ public class Planter : MonoBehaviour
                         string res = ghostPlace.GetComponent<StaticEntity>().CheckTerrain(Vector3Int.RoundToInt(hit.point)+Vector3Int.down);
                         Debug.Log(res);
                         if(res == "good"){
+                            warningtext.text = "";
                             GameObject newthing = Instantiate(prefabToPlace, pos, Quaternion.identity);
                             //newthing.transform.RotateAround(transform.position,Vector3.up,Random.Range(0,90));
                             Vector3 angles = newthing.transform.rotation.eulerAngles;
@@ -88,6 +88,8 @@ public class Planter : MonoBehaviour
                             if( newthing.GetComponent<StaticEntity>().name != "grass"){
                                 ground.plants.Add(new Vector2Int(pos.x,pos.z), newthing.GetComponent<StaticEntity>());
                             }
+                        } else {
+                            warningtext.text = res;
                         }
                     }
                     
@@ -97,6 +99,8 @@ public class Planter : MonoBehaviour
                     Destroy(ghostPlace);
                 }
             }
+        } else {
+            warningtext.text = "";
         }
     }
 }

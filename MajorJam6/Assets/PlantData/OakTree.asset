@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce581f0d899c3e647984914540d21a47, type: 3}
-  m_Name: MapleTree
+  m_Name: OakTree
   m_EditorClassIdentifier: 
-  plantName: tree_maple
+  plantName: tree_oak
   K_consumption: 0
   P_consumption: 0
   N_consumption: 1
-  K_release: 1
-  P_release: 0
+  K_release: 0
+  P_release: 0.5
   N_release: 0
   growthCycle: 2
   minTemp: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
   maxHumid: 99
   shadeRadius: 0
   requirement: 
-  humidityToWater: 0
+  humidityToWater: 60
   waterToHumidity: 0
   reproduces: 1
   reproduction_radius: 8

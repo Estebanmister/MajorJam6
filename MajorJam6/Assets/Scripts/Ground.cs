@@ -327,7 +327,6 @@ public class Ground : MonoBehaviour
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-        Generate();
     }
     public void SwitchMode(){
         if(editMode){
@@ -338,10 +337,11 @@ public class Ground : MonoBehaviour
             editMode = true;
         }
     }
-    // Update is called once per frame
+    float delay = 0;
     void Update()
     {
         if(editMode){
+            delay =0;
             foreach(EditableBlock editableBlock in editableBlocksList){
                 if(editableBlock.test_thing){
                     editableBlock.UpdateHumidity();
@@ -361,6 +361,11 @@ public class Ground : MonoBehaviour
                 }
             }
         } else {
+            delay += Time.deltaTime;
+            if(delay > 300){
+                delay = 0;
+                nutrientMapper.UpdateMaps();
+            }
         }
     }
 }

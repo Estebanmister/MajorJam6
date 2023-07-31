@@ -8,6 +8,9 @@ TagManager:
   - world
   - waterplacer
   - plant
+  - manager
+  - audio
+  - mission
   layers:
   - Default
   - TransparentFX
