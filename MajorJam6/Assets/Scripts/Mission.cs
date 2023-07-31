@@ -6,9 +6,9 @@ using UnityEngine;
 public class Mission : ScriptableObject
 {
     public string description;
-    public string[] plantsrequired;
+    public PlantScriptable plantsrequired;
     public int quantityofPlants;
-    public string[] animalsrequired;
+    public string animalsrequired;
     public int quantityofAnimals;
     public float daysRequired;
 }

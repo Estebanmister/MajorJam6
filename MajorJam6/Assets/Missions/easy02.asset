@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01e6351304f762a44971a6fb15dafae8, type: 3}
-  m_Name: easy01
+  m_Name: easy02
   m_EditorClassIdentifier: 
-  description: Keep at least 10 Dahlias alive for 2 weeks
+  description: Keep at least 20 Heathers alive for 2 weeks
   plantsrequired:
-  - {fileID: 11400000, guid: d65850e6f6f4e4741a898a1b7abfc8fc, type: 2}
-  quantityofPlants: 10
+  - {fileID: 11400000, guid: f3a242884a8e1b047893dcfff28baa27, type: 2}
+  quantityofPlants: 20
   animalsrequired: []
   quantityofAnimals: 0
   daysRequired: 14

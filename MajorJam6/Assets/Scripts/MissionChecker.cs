@@ -2,23 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class MissionChecker : MonoBehaviour
 {
+    Ground ground;
+    public TMP_Text desrciption;
+    Mission mission;
+    public Mission[] tochoose;
+    int plantsPresent = 0;
+    double timeSince=0;
 
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
+        mission = tochoose[Random.Range(0,tochoose.Length)];
     }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode){
-        foreach(GameObject manager in GameObject.FindGameObjectsWithTag("mission")){
-            if (manager == gameObject){
-                continue;
-            } else {
-                Destroy(gameObject);
+    void Update(){
+        desrciption.text = mission.description;
+        if(mission.plantsrequired){
+            foreach(StaticEntity staticEntity in ground.plants.Values){
+                if(staticEntity.plantType == mission.plantsrequired){
+                    plantsPresent += 1;
+                }
+            }
+            if(plantsPresent >= mission.quantityofPlants){
+                timeSince += Time.deltaTime;
             }
         }
     }
+    
 }
