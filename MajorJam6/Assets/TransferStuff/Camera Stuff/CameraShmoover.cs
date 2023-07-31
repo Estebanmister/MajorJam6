@@ -23,7 +23,14 @@ public class CameraShmoover : MonoBehaviour
     bool lockedCam;
     float zoomAmt;
     GameObject lockTarget;
+    bool scroll = true;
 
+    public void BlockScroll(){
+        scroll = false;
+    }
+    public void unblockscroll(){
+        scroll = true;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +38,7 @@ public class CameraShmoover : MonoBehaviour
         zoomAmt = (minZoomDist + maxZoomDist) / 2;
         lockedCam = false;
         ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
+        transform.position = new Vector3(ground.size/2,transform.position.y,ground.size/2);
     }
 
     // Update is called once per frame
@@ -52,7 +60,10 @@ public class CameraShmoover : MonoBehaviour
             FocusOnPosition(lockTarget.transform.position);
         }
         Rotate();
-        Zoom();
+        if(scroll){
+            Zoom();
+        }
+        
         
     }
 

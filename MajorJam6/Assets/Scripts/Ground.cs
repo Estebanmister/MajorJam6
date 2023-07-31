@@ -35,7 +35,11 @@ public class Ground : MonoBehaviour
     public MeshFilter combinedGround;
     MeshRenderer meshRenderer;
     public bool editMode = true;
-    public void Generate(){
+    public void Generate(float tseed = -1){
+        if(tseed != -1){
+            seed = tseed;
+        }
+        
         for(int i = 0; i < size; i += 1){
             for(int ii = 0; ii < size; ii += 1){
                 float heightHere =  Mathf.PerlinNoise(((float)i/(float)size)+seed, ((float)ii/(float)size)+seed) * (float)height;

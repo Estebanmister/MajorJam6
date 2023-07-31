@@ -12,7 +12,7 @@ public class MissionChecker : MonoBehaviour
     public Mission[] tochoose;
     int plantsPresent = 0;
     double timeSince=0;
-
+    bool missionDone = false;
     void Start()
     {
         ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
@@ -20,6 +20,9 @@ public class MissionChecker : MonoBehaviour
     }
     void Update(){
         desrciption.text = mission.description;
+        if(missionDone){
+            desrciption.text = "<b><s>" + mission.description;
+        }
         if(mission.plantsrequired){
             foreach(StaticEntity staticEntity in ground.plants.Values){
                 if(staticEntity.plantType == mission.plantsrequired){
@@ -28,6 +31,9 @@ public class MissionChecker : MonoBehaviour
             }
             if(plantsPresent >= mission.quantityofPlants){
                 timeSince += Time.deltaTime;
+            }
+            if(timeSince/120 > mission.daysRequired){
+                missionDone = true;
             }
         }
     }

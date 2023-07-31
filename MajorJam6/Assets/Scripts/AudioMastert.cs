@@ -10,6 +10,7 @@ public class AudioMastert : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        transform.localPosition = Camera.main.transform.position;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode){
@@ -17,8 +18,10 @@ public class AudioMastert : MonoBehaviour
             if (manager == gameObject){
                 continue;
             } else {
-                DestroyImmediate(manager);
+                DestroyImmediate(gameObject);
             }
         }
+        transform.parent = Camera.main.transform;
+        transform.localPosition = Vector3.zero;
     }
 }

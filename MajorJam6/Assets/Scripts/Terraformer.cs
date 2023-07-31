@@ -77,7 +77,7 @@ public class Terraformer : MonoBehaviour
             if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, LayerMask.GetMask("groundBlock"))){
                 Vector3Int pos = Vector3Int.RoundToInt(hit.transform.position+Vector3.up);
                 waterPlateThing.SetActive(true);
-                waterPlateThing.transform.localScale = new Vector3(ground.size*0.1f, 1, ground.size*0.1f);
+                waterPlateThing.transform.localScale = new Vector3(ground.size*0.05f, 1, ground.size*0.05f);
                 waterPlateThing.transform.position = pos+Vector3.up;
                 if(Input.GetMouseButtonDown(0)){
                     if(ground.groundEditableBlocks.ContainsKey(pos)){
@@ -90,6 +90,8 @@ public class Terraformer : MonoBehaviour
                     waterPlateThing.SetActive(false);
                     placingWater = false;
                 }
+            } else {
+                waterPlateThing.SetActive(false);
             }
         }
     }

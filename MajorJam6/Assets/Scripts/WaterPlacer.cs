@@ -12,8 +12,14 @@ public class WaterPlacer : MonoBehaviour
     int surface = 0;
     int depth = 99;
     public bool test= false;
+    int counts = 0;
+    public void NewFillWater(Vector3Int where){
+
+    }
     public void PlaceWater(Vector3Int where){
+        counts = 0;
         PlaceWaterBlock(where);
+
         GameObject newLake = Instantiate(lakePrefab);
         Lake newLakeCom = newLake.GetComponent<Lake>();
         MeshFilter meshFilter = newLake.GetComponent<MeshFilter>();
@@ -47,6 +53,14 @@ public class WaterPlacer : MonoBehaviour
         surface = 0;
     }
     void PlaceWaterBlock(Vector3Int where){
+        if(counts >= 700){
+            return;
+        }
+        counts += 1;
+        if(occupiedSpace.Contains(where)){
+            counts -=1;
+            return;
+        }
         if(surface < where.y){
             surface = where.y;
         }
@@ -56,12 +70,12 @@ public class WaterPlacer : MonoBehaviour
             ground.groundEditableBlocks[where].properties.humidity = 100;
             ground.groundEditableBlocks[where].UpdateHumidity();
             if (ground.groundEditableBlocks[where].type == 0){
+                counts -=1;
                 return;
+                
             }
         }
-        if(occupiedSpace.Contains(where)){
-            return;
-        }
+        
         if(depth > where.y){
             depth = where.y;
         }
@@ -85,7 +99,7 @@ public class WaterPlacer : MonoBehaviour
         if(where.z < ground.size-1){
             PlaceWaterBlock(where + Vector3Int.forward);
         }
-
+        counts -=1;
             
         
     }

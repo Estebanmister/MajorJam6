@@ -16,7 +16,7 @@ public class SettingsMaster : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         if(debug){
             Ground ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
-            ground.Generate();
+            ground.Generate(Random.Range(0,99999));
         }
     }
 
@@ -42,6 +42,6 @@ public class SettingsMaster : MonoBehaviour
         }
         Ground ground = GameObject.FindGameObjectWithTag("ground").GetComponent<Ground>();
         ground.size = size;
-        ground.Generate();
+        ground.Generate(Random.Range(0,99999));
     }
 }

@@ -350,7 +350,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &185301518
 PrefabInstance:
@@ -1257,9 +1257,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dahlia (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8202830842190970103, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1523,9 +1527,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Heather
       objectReference: {fileID: 0}
+    - target: {fileID: 8202830842190970103, guid: 80305f15c634b1749969ef98dbd40058, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 80305f15c634b1749969ef98dbd40058, type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 80305f15c634b1749969ef98dbd40058, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2547,37 +2555,6 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1478171402
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1478171403}
-  m_Layer: 0
-  m_Name: MissionChecker
-  m_TagString: mission
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1478171403
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478171402}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 720, y: 409, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1612675489
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3182,9 +3159,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dahlia
       objectReference: {fileID: 0}
+    - target: {fileID: 8202830842190970103, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 09af6eca978441e468a7b0caeb070588, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3450,9 +3431,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bluebonnet
       objectReference: {fileID: 0}
+    - target: {fileID: 8202830842190970103, guid: 9b3366a516f78d14aa113d1230da544d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 9b3366a516f78d14aa113d1230da544d, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8991230790608243308, guid: 9b3366a516f78d14aa113d1230da544d, type: 3}
       propertyPath: m_LocalPosition.x

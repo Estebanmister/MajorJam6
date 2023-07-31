@@ -12,7 +12,7 @@ public class StaticEntity : MonoBehaviour
     public bool ghost{
         get { return _ghost;}
         set { _ghost = value;
-               if(_ghost) MusicStart();}
+               if(!_ghost) MusicStart();}
     }
     [SerializeField] bool _ghost = true;
     float cycleAge = 0;
@@ -231,7 +231,6 @@ public class StaticEntity : MonoBehaviour
                 for(int i = mypos.x-plantType.shadeRadius; i <= mypos.x+plantType.shadeRadius; i+=1){
                     for(int ii = mypos.z-plantType.shadeRadius; ii <= mypos.z+plantType.shadeRadius; ii+=1){
                         if(ground.plants.ContainsKey(new Vector2Int(i,ii))){
-                            Debug.Log(ground.plants[new Vector2Int(i,ii)].plantType.plantName);
                             if(ground.plants[new Vector2Int(i,ii)].plantType.plantName.StartsWith("tree_")){
                                 shaded = true;
                                 break;
@@ -257,22 +256,38 @@ public class StaticEntity : MonoBehaviour
                     plantType.edible = true;
                 }
                 if(plantType.reproduces){
+                    Debug.Log("REPRODUCE");
                     bool chosen = false;
                     Vector3Int potentialBlock = mypos;
-                    while(!chosen){
-                        int x = mypos.x + Random.Range(1,plantType.reproduction_radius+1);
-                        int y = mypos.z + Random.Range(1,plantType.reproduction_radius+1);
-                        potentialBlock = new Vector3Int(x, mypos.y,y);
-                        if(ground.groundBlocksProp.ContainsKey(potentialBlock)){
-                            if(!ground.groundBlocksProp.ContainsKey(potentialBlock+Vector3Int.up)){
-                                chosen = true;
-                                break;
+                    for(int i = mypos.x - plantType.reproduction_radius; i < mypos.x + plantType.reproduction_radius;i += 1){
+                        for(int ii = mypos.z - plantType.reproduction_radius; ii < mypos.z + plantType.reproduction_radius;ii += 1){
+                            potentialBlock = new Vector3Int(i, mypos.y-1,ii);
+                            if(ground.plants.ContainsKey(new Vector2Int(i,ii))){
+                                continue;
                             }
+                            if(ground.groundBlocksProp.ContainsKey(potentialBlock)){
+                                if(!ground.groundBlocksProp.ContainsKey(potentialBlock+Vector3Int.up)){
+                                    if(ground.groundBlocksProp[potentialBlock].type == 0){
+                                        if(Random.Range(0,100)>50){
+                                            chosen = true;
+                                            break;
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                        if(chosen){
+                            break;
                         }
                     }
                     if(chosen){
+                        Debug.Log("bebe");
                         GameObject child = Instantiate(gameObject, potentialBlock + Vector3Int.up, Quaternion.identity);
                         ground.plants.Add(new Vector2Int(potentialBlock.x,potentialBlock.z), child.GetComponent<StaticEntity>());
+                        child.GetComponent<StaticEntity>().cycleAge = 0;
+                        child.GetComponent<StaticEntity>().mypos = potentialBlock + Vector3Int.up;
+                        child.GetComponent<StaticEntity>().health = 10;
                         // unsure if this resets the variables or not
                         //child.GetComponent<StaticEntity>
                     }
